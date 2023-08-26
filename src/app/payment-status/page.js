@@ -12,11 +12,11 @@ const PaymentSuccessPage = () => {
 
     if (searchParams.get("success") === "true") {
       setPaymentStatus("Payment Successful!");
-      router.push("/thank-you")
+      router.push("https://dainty-sunshine-58544a.netlify.app/thank-you")
       // here user will be redirect to thank you page
     } else if (searchParams.get("success") === "false") {
       setPaymentStatus("Payment Canceled.");
-      router.push("/thank-you")
+      router.push("https://dainty-sunshine-58544a.netlify.app/thank-you")
       // here user will be redirect to cancele  page
 
     }
