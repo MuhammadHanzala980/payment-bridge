@@ -10,6 +10,7 @@ export async function PUT(request) {
     try {
       const formData = qs.stringify({
         status: "processing",
+        transaction_id: "transaction_id"
       });
       const id = req.orderId;
       const response = await axios.put(

@@ -32,6 +32,8 @@ export async function POST(request) {
 
       return NextResponse.json({
         sessionId: session.id,
+        checkoutSession: session,
+
       });
     } catch (error) {
       console.log(error);

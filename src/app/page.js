@@ -36,9 +36,10 @@ const PaymentPage = () => {
         clientSecret,
         totalAmount: orderData.total,
       });
-      const { sessionId } = createSession.data;
-      console.log(sessionId);
 
+      const { sessionId, checkoutSession } = createSession.data;
+      console.log(sessionId, createSession);
+      orderData.transectionId = sessionId;
       localStorage.setItem("orderData", JSON.stringify(orderData));
       const stripe = await stripePromise;
 

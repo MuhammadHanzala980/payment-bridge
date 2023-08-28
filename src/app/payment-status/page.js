@@ -6,7 +6,6 @@ import axios from "axios";
 
 const PaymentSuccessPage = () => {
   const [paymentStatus, setPaymentStatus] = useState("Processing...");
-  const [paymentAmount, setPaymentAmount] = useState("");
   const router = useRouter();
 
   useEffect(() => {
@@ -14,17 +13,13 @@ const PaymentSuccessPage = () => {
 
     if (searchParams.get("success") === "true") {
       setPaymentStatus("Payment Successful!");
-
-      // Retrieve orderData from local storage
       const orderData = JSON.parse(localStorage.getItem("orderData"));
-
+      console.log(orderData);
       if (orderData) {
-        // Extract orderId from orderData
         const orderId = orderData.id;
-
-        // Call the update-order-status API route to update the order status to processing
+        const transectionId = orderData.transectionId;
         axios
-          .put("/api/update-order-status", { orderId })
+          .put("/api/update-order-status", { orderId, transectionId })
           .then((response) => {
             console.log(response.data);
             router.push(
@@ -47,7 +42,6 @@ const PaymentSuccessPage = () => {
   return (
     <div>
       <h1>{paymentStatus}</h1>
-      <p>{paymentAmount}</p>
     </div>
   );
 };
