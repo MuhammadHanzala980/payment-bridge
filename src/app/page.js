@@ -1,5 +1,4 @@
 "use client";
-
 import { useEffect } from "react";
 import axios from "axios";
 import { loadStripe } from "@stripe/stripe-js";
@@ -12,34 +11,35 @@ const PaymentPage = () => {
   useEffect(() => {
     const searchParams = new URLSearchParams(window.location.search);
     const orderId = searchParams.get("orderid");
-    const totalAmount = searchParams.get("totalAmount");
 
-    if (orderId && totalAmount) {
-      initiatePayment(orderId, totalAmount);
+    if (orderId) {
+      initiatePayment(orderId);
     } else {
       console.log("err");
     }
   }, []);
 
-  const initiatePayment = async (orderId, totalAmount) => {
+  const initiatePayment = async (orderId) => {
     try {
       const createPaymentIntent = await axios.post(
         "/api/create-payment-intent",
         {
           orderId,
-          totalAmount,
         }
       );
 
-      const { paymentIntent, clientSecret } = createPaymentIntent.data;
-      console.log(clientSecret, paymentIntent);
+      const { paymentIntent, clientSecret, orderData } =
+        createPaymentIntent.data;
+      console.log(createPaymentIntent.data);
 
       const createSession = await axios.post("/api/create-payment-session", {
-        // clientSecret,
-        totalAmount,
+        clientSecret,
+        totalAmount: orderData.total,
       });
       const { sessionId } = createSession.data;
+      console.log(sessionId);
 
+      localStorage.setItem("orderData", JSON.stringify(orderData));
       const stripe = await stripePromise;
 
       const result = await stripe.redirectToCheckout({
