@@ -11,22 +11,22 @@ const stripePromise = loadStripe(
 const PaymentPage = () => {
   useEffect(() => {
     const searchParams = new URLSearchParams(window.location.search);
-    const orderDetails = searchParams.get("orderDetails");
+    const orderId = searchParams.get("orderid");
     const totalAmount = searchParams.get("totalAmount");
 
-    if (orderDetails && totalAmount) {
-      initiatePayment(orderDetails, totalAmount);
+    if (orderId && totalAmount) {
+      initiatePayment(orderId, totalAmount);
     } else {
       console.log("err");
     }
   }, []);
 
-  const initiatePayment = async (orderDetails, totalAmount) => {
+  const initiatePayment = async (orderId, totalAmount) => {
     try {
       const createPaymentIntent = await axios.post(
         "/api/create-payment-intent",
         {
-          orderDetails,
+          orderId,
           totalAmount,
         }
       );

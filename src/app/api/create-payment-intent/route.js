@@ -6,8 +6,8 @@ const stripeInstance = new stripe(stripeSecretKey);
 export async function POST(request) {
   if (request.method === "POST") {
     const req = await request.json();
-    const { orderDetails, totalAmount } = req;
-    console.log(orderDetails, totalAmount);
+    const { orderId, totalAmount } = req;
+    console.log(orderId, totalAmount);
     try {
       const paymentIntent = await stripeInstance.paymentIntents.create({
         amount: totalAmount,
