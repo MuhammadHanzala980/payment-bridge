@@ -1,8 +1,32 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { useRouter } from "next/navigation";
 import axios from "axios";
+import lottie from "lottie-web";
+import redirectCheckout from "../lottie/generateReciept.json";
+
+const LottieAnimation = ({ animationData }) => {
+  const containerRef = useRef(null);
+
+  useEffect(() => {
+    if (containerRef.current) {
+      const anim = lottie.loadAnimation({
+        container: containerRef.current,
+        renderer: "svg",
+        loop: true,
+        autoplay: true,
+        animationData: animationData,
+      });
+
+      return () => {
+        anim.destroy();
+      };
+    }
+  }, [animationData]);
+
+  return <div ref={containerRef} />;
+};
 
 const PaymentSuccessPage = () => {
   const [paymentStatus, setPaymentStatus] = useState("Processing...");
@@ -23,7 +47,7 @@ const PaymentSuccessPage = () => {
           .then((response) => {
             console.log(response.data);
             router.push(
-              `https://mcdfynew.itrakmedia.com/checkout/order-received/${orderId}/?key=${orderData.order_key}`
+              `${process.env.ORDER_SUCCESS_URL}/${orderId}/?key=${orderData.order_key}`
             );
           })
           .catch((error) => {
@@ -40,8 +64,24 @@ const PaymentSuccessPage = () => {
   }, []);
 
   return (
-    <div>
-      <h1>{paymentStatus}</h1>
+    <div
+      style={{
+        backgroundColor: "#fff",
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        height: "100vh",
+      }}
+    >
+      <div style={{textAlign: 'center'}} >
+        <div style={{ maxWidth: "400px" }}>
+          <LottieAnimation animationData={redirectCheckout} />
+        </div>
+        <h2 style={{ color: "#000" }}>Payment Complete</h2>
+        <p style={{ color: "#222", fontWeight: "600", fontSize: "13px" , marginTop: '1em'}}>
+          Please Wait While We Generate Your Order Reciept!
+        </p>
+      </div>
     </div>
   );
 };

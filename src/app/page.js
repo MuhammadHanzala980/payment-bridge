@@ -1,11 +1,37 @@
 "use client";
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import axios from "axios";
 import { loadStripe } from "@stripe/stripe-js";
+import lottie from "lottie-web";
+import redirectCheckout from "./lottie/redirectCheckout.json";
 
 const stripePromise = loadStripe(
   process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY
 );
+
+// components/LottieAnimation.js
+
+const LottieAnimation = ({ animationData }) => {
+  const containerRef = useRef(null);
+
+  useEffect(() => {
+    if (containerRef.current) {
+      const anim = lottie.loadAnimation({
+        container: containerRef.current,
+        renderer: "svg",
+        loop: true,
+        autoplay: true,
+        animationData: animationData,
+      });
+
+      return () => {
+        anim.destroy();
+      };
+    }
+  }, [animationData]);
+
+  return <div ref={containerRef} />;
+};
 
 const PaymentPage = () => {
   useEffect(() => {
@@ -57,7 +83,23 @@ const PaymentPage = () => {
     }
   };
 
-  return <div>Redirecting to Stripe...</div>;
+  return (
+    <div
+      style={{
+        backgroundColor: "#fff",
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        height: "100vh",
+      }}
+    >
+      <div style={{textAlign: 'center'}} >
+        <LottieAnimation animationData={redirectCheckout} />
+        <h2 style={{ color: "#000" }}>Redirecting To Secure Payment</h2>
+        <p style={{color: "#222", fontWeight:'600', fontSize: "13px"}} >Please Wait While We Generate Secure Payment Gateaway!</p>
+      </div>
+    </div>
+  );
 };
 
 export default PaymentPage;
