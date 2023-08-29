@@ -9,7 +9,7 @@ export async function POST(request) {
     const { orderId } = req;
     console.log("geting order data...", orderId);
     const response = await axios.get(
-      `${process.env.FETCH_ORDER_DETAILS}/${orderId}?consumer_key=${process.env.CONSUMER_KEY}&consumer_secret=${process.env.CONSUMER_SECRET}`
+      `${process.env.SITE_URL}/wp-json/wc/v3/orders/${orderId}?consumer_key=${process.env.CONSUMER_KEY}&consumer_secret=${process.env.CONSUMER_SECRET}`
     );
 
     const orderData = response.data;
