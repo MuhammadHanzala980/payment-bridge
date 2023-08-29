@@ -1,5 +1,5 @@
 "use client";
-
+import "../../../.env.local";
 import { useEffect, useState, useRef } from "react";
 import { useRouter } from "next/navigation";
 import axios from "axios";
@@ -28,27 +28,29 @@ const LottieAnimation = ({ animationData }) => {
   return <div ref={containerRef} />;
 };
 
+const test = process.env.FETCH_ORDER_DETAILS;
 const PaymentSuccessPage = () => {
   const [paymentStatus, setPaymentStatus] = useState("Processing...");
   const router = useRouter();
-
+  
   useEffect(() => {
     const searchParams = new URLSearchParams(window.location.search);
+    console.log(test);
 
     if (searchParams.get("success") === "true") {
       setPaymentStatus("Payment Successful!");
       const orderData = JSON.parse(localStorage.getItem("orderData"));
-      console.log(orderData);
       if (orderData) {
         const orderId = orderData.id;
         const transectionId = orderData.transectionId;
         axios
           .put("/api/update-order-status", { orderId, transectionId })
           .then((response) => {
-            console.log(response.data);
-            router.push(
-              `https://mcdfynew.itrakmedia.com/checkout/order-received/${orderId}/?key=${orderData.order_key}`
-            );
+            const checkoutUrl = orderData.checkoutUrl;
+            console.log(response.data, '>>>');
+            const redirectUrl = `${response.data.checkOutUrl}/${orderId}/?key=${orderData.order_key}`;
+            console.log(redirectUrl);
+            router.push(redirectUrl);
           })
           .catch((error) => {
             console.error("Error updating order status:", error);
@@ -58,8 +60,6 @@ const PaymentSuccessPage = () => {
       }
     } else if (searchParams.get("success") === "false") {
       setPaymentStatus("Payment Canceled.");
-
-      // router.push("https://dainty-sunshine-58544a.netlify.app/canceled");
     }
   }, []);
 
@@ -73,12 +73,19 @@ const PaymentSuccessPage = () => {
         height: "100vh",
       }}
     >
-      <div style={{textAlign: 'center'}} >
+      <div style={{ textAlign: "center" }}>
         <div style={{ maxWidth: "400px" }}>
           <LottieAnimation animationData={redirectCheckout} />
         </div>
         <h2 style={{ color: "#000" }}>Payment Complete</h2>
-        <p style={{ color: "#222", fontWeight: "600", fontSize: "13px" , marginTop: '1em'}}>
+        <p
+          style={{
+            color: "#222",
+            fontWeight: "600",
+            fontSize: "13px",
+            marginTop: "1em",
+          }}
+        >
           Please Wait While We Generate Your Order Reciept!
         </p>
       </div>
