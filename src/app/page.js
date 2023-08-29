@@ -56,7 +56,7 @@ const PaymentPage = () => {
 
       const { paymentIntent, clientSecret, orderData } =
         createPaymentIntent.data;
-      console.log(createPaymentIntent.data);
+      console.log(createPaymentIntent.data,">>>>");
 
       const createSession = await axios.post("/api/create-payment-session", {
         clientSecret,
