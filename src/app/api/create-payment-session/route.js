@@ -26,7 +26,7 @@ export async function POST(request) {
           },
         ],
         mode: "payment",
-        success_url: `${process.env.ORDER_SUCCESS_URL}/payment-status/?success=true`,
+        success_url: `${process.env.SUCCESS_URL}/payment-status/?success=true`,
         // cancel_url: `http://localhost:3000/payment-status/?success=false`,
       });
 
