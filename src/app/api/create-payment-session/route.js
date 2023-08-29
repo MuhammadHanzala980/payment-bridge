@@ -7,7 +7,8 @@ import { NextResponse } from "next/server";
 export async function POST(request) {
   if (request.method === "POST") {
     const req = await request.json();
-    const { totalAmount } = req;
+    const { totalAmount, orderId } = req;
+    console.log(totalAmount, orderId, "<<<<body>>>>");
     try {
       console.log("Creating Session...");
       const session = await stripe.checkout.sessions.create({
@@ -19,7 +20,7 @@ export async function POST(request) {
               unit_amount: totalAmount * 100,
               product_data: {
                 name: "Total Amount",
-                description: "Payment for the total amount",
+                description: `Payment for order ${orderId} the total amount`,
               },
             },
             quantity: 1,
@@ -28,12 +29,13 @@ export async function POST(request) {
         mode: "payment",
         success_url: `${process.env.SUCCESS_URL}/payment-status/?success=true`,
         // cancel_url: `http://localhost:3000/payment-status/?success=false`,
+        metadata: {
+          order_id: orderId,
+        },
       });
-
       return NextResponse.json({
         sessionId: session.id,
         checkoutSession: session,
-
       });
     } catch (error) {
       console.log(error);

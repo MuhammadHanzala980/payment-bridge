@@ -60,6 +60,7 @@ const PaymentPage = () => {
 
       const createSession = await axios.post("/api/create-payment-session", {
         clientSecret,
+        orderId,
         totalAmount: orderData.total,
       });
 
