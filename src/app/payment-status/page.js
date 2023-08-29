@@ -45,7 +45,7 @@ const PaymentSuccessPage = () => {
           .put("/api/update-order-status", { orderId, transectionId })
           .then((response) => {
             const redirectUrl = `${response.data.checkOutUrl}/${orderId}/?key=${orderData.order_key}`;
-            // router.push(redirectUrl);
+            router.push(redirectUrl);
             console.log(redirectUrl)
           })
           .catch((error) => {
