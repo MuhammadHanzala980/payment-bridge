@@ -47,7 +47,7 @@ const PaymentSuccessPage = () => {
             console.log(response)
             const redirectUrl = `${response.data.checkOutUrl}/${response.data.orderId}/?key=${orderData.order_key}`;
             console.log(redirectUrl);
-            router.push(redirectUrl);
+            // router.push(redirectUrl);
           })
           .catch((error) => {
             console.error("Error updating order status:", error);
