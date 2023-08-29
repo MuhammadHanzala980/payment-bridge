@@ -47,7 +47,7 @@ const PaymentSuccessPage = () => {
           .then((response) => {
             console.log(response.data);
             router.push(
-              `${process.env.ORDER_SUCCESS_URL}/${orderId}/?key=${orderData.order_key}`
+              `${process.env.CHECKOUT_URL}/${orderId}/?key=${orderData.order_key}`
             );
           })
           .catch((error) => {
