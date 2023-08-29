@@ -28,14 +28,12 @@ const LottieAnimation = ({ animationData }) => {
   return <div ref={containerRef} />;
 };
 
-const test = process.env.FETCH_ORDER_DETAILS;
 const PaymentSuccessPage = () => {
   const [paymentStatus, setPaymentStatus] = useState("Processing...");
   const router = useRouter();
   
   useEffect(() => {
     const searchParams = new URLSearchParams(window.location.search);
-    console.log(test);
 
     if (searchParams.get("success") === "true") {
       setPaymentStatus("Payment Successful!");
@@ -46,10 +44,7 @@ const PaymentSuccessPage = () => {
         axios
           .put("/api/update-order-status", { orderId, transectionId })
           .then((response) => {
-            const checkoutUrl = orderData.checkoutUrl;
-            console.log(response.data, '>>>');
             const redirectUrl = `${response.data.checkOutUrl}/${orderId}/?key=${orderData.order_key}`;
-            console.log(redirectUrl);
             router.push(redirectUrl);
           })
           .catch((error) => {
