@@ -24,6 +24,7 @@ export async function PUT(request) {
       );
 
       if (response.status === 200) {
+        console.log(process.env.SITE_URL,"<<<<<<<<process.env.SITE_URL>>>>>>>>")
         return NextResponse.json({
           message: "Order status updated to processing",
           id: id,
