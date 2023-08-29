@@ -47,7 +47,7 @@ const PaymentSuccessPage = () => {
           .then((response) => {
             console.log(response.data);
             router.push(
-              `${process.env.CHECKOUT_URL}/${orderId}/?key=${orderData.order_key}`
+              `https://mcdfynew.itrakmedia.com/checkout/order-received/${orderId}/?key=${orderData.order_key}`
             );
           })
           .catch((error) => {
