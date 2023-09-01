@@ -39,46 +39,101 @@ const PaymentPage = () => {
     const orderId = searchParams.get("orderid");
 
     if (orderId) {
-      initiatePayment(orderId);
+      fetchOrderData(orderId);
     } else {
       console.log("err");
     }
   }, []);
 
-  const initiatePayment = async (orderId) => {
-    try {
-      const createPaymentIntent = await axios.post(
-        "/api/create-payment-intent",
+  const createPaymentSession = async ({ orderId, totalAmount }) => {
+    const createSession = await axios.post("/api/create-payment-session", {
+      orderId: orderId,
+      totalAmount: totalAmount,
+    });
+    return createSession;
+  };
+
+  const createSubscriptionSession = async ({
+    orderId,
+    email,
+    totalAmount,
+    interval,
+  }) => {
+    const createSession = await axios.post("/api/create-subscription-session", {
+      orderId: orderId,
+      email: email,
+      totalAmount: totalAmount,
+      interval: interval,
+    });
+    return createSession;
+  };
+
+  const redirectToStripe = async ({ sessionId }) => {
+    const stripe = await stripePromise;
+    const result = await stripe.redirectToCheckout({
+      sessionId: sessionId,
+    });
+
+    if (result.error) {
+      console.error("Payment error:", result.error.message);
+    } else {
+      console.log("Payment done!");
+    }
+  };
+
+  async function getOrderType(orderData, orderId) {
+    if (orderData.parent_id === 0) {
+      const paymentSession = await createPaymentSession({
+        orderId: orderId,
+        totalAmount: orderData.total,
+      });
+      const { sessionId } = paymentSession.data;
+      orderData.transectionId = sessionId;
+      localStorage.setItem("orderData", JSON.stringify(orderData));
+      await redirectToStripe({ sessionId });
+
+      return "Single Payment Order";
+    } else if (orderData.id > orderData.parent_id) {
+      const subscriptionDetails = await axios.post(
+        "/api/fetch-subscription-details",
         {
           orderId,
         }
       );
 
-      const { paymentIntent, clientSecret, orderData } =
-        createPaymentIntent.data;
-      console.log(createPaymentIntent.data,">>>>");
-
-      const createSession = await axios.post("/api/create-payment-session", {
-        clientSecret,
+      const subscriptionData = subscriptionDetails.data.orderData;
+      const interval = subscriptionData.billing_period;
+      const billing = subscriptionData.billing;
+      const subscriptionSession = await createSubscriptionSession({
         orderId,
-        totalAmount: orderData.total,
+        email: billing.email,
+        totalAmount: subscriptionData.total,
+        interval,
       });
 
-      const { sessionId, checkoutSession } = createSession.data;
-      console.log(sessionId, createSession);
-      orderData.transectionId = sessionId;
-      localStorage.setItem("orderData", JSON.stringify(orderData));
-      const stripe = await stripePromise;
+      const { sessionId } = subscriptionSession.data;
+      subscriptionData.transectionId = sessionId;
+      localStorage.setItem("orderData", JSON.stringify(subscriptionData));
+      await redirectToStripe({ sessionId });
+    }
+    {
+      return "Subscription Order";
+    }
+  }
 
-      const result = await stripe.redirectToCheckout({
-        sessionId: sessionId,
+  const fetchOrderData = async (orderId) => {
+    try {
+      const orderDetails = await axios.post("/api/fetch-order-details", {
+        orderId,
       });
+      const { orderData } = orderDetails?.data;
+      console.log(orderData, ">>>>");
 
-      if (result.error) {
-        console.error("Payment error:", result.error.message);
-      } else {
-        console.log("Payment done!");
-      }
+      const orderType = await getOrderType(orderData, orderId);
+
+      // const { sessionId } = paymentSession.data;
+      // orderData.transectionId = sessionId;
+      // localStorage.setItem("orderData", JSON.stringify(orderData));
     } catch (error) {
       console.error(" request error:", error);
     }
@@ -94,10 +149,12 @@ const PaymentPage = () => {
         height: "100vh",
       }}
     >
-      <div style={{textAlign: 'center'}} >
+      <div style={{ textAlign: "center" }}>
         <LottieAnimation animationData={redirectCheckout} />
         <h2 style={{ color: "#000" }}>Redirecting To Secure Payment</h2>
-        <p style={{color: "#222", fontWeight:'600', fontSize: "13px"}} >Please Wait While We Generate Secure Payment Gateaway!</p>
+        <p style={{ color: "#222", fontWeight: "600", fontSize: "13px" }}>
+          Please Wait While We Generate Secure Payment Gateaway!
+        </p>
       </div>
     </div>
   );

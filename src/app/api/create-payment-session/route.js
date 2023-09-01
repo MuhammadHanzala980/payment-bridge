@@ -8,7 +8,7 @@ export async function POST(request) {
   if (request.method === "POST") {
     const req = await request.json();
     const { totalAmount, orderId } = req;
-    console.log(totalAmount, orderId, "<<<<body>>>>");
+    console.log(req, "<<<<<<<<<>>>>>>>>>" ,totalAmount, orderId, "<<<<body>>>>");
     try {
       console.log("Creating Session...");
       const session = await stripe.checkout.sessions.create({
