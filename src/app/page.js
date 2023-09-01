@@ -39,6 +39,7 @@ const PaymentPage = () => {
     const orderId = searchParams.get("orderid");
 
     if (orderId) {
+      console.log(orderId);
       fetchOrderData(orderId);
     } else {
       console.log("err");
@@ -127,8 +128,8 @@ const PaymentPage = () => {
       const orderDetails = await axios.post("/api/fetch-order-details", {
         orderId,
       });
-      const { orderData } = orderDetails?.data;
       console.log(orderDetails, ">>>>");
+      const { orderData } = orderDetails?.data;
 
       const orderType = await getOrderType(orderData, orderId);
 
