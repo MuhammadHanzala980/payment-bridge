@@ -100,6 +100,7 @@ const PaymentPage = () => {
           orderId,
         }
       );
+      console.log(subscriptionDetails, ">>>>");
 
       const subscriptionData = subscriptionDetails.data.orderData;
       const interval = subscriptionData.billing_period;
@@ -127,7 +128,7 @@ const PaymentPage = () => {
         orderId,
       });
       const { orderData } = orderDetails?.data;
-      console.log(orderData, ">>>>");
+      console.log(orderDetails, ">>>>");
 
       const orderType = await getOrderType(orderData, orderId);
 
