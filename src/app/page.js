@@ -125,7 +125,7 @@ const PaymentPage = () => {
 
   const fetchOrderData = async (orderId) => {
     try {
-      const orderDetails = await axios.post("http://localhost:3000/api/fetch-order-details", {
+      const orderDetails = await axios.post("/api/fetch-order-details", {
         orderId,
       });
       console.log(orderDetails, ">>>>");
