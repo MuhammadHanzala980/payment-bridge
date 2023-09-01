@@ -137,7 +137,7 @@ const PaymentPage = () => {
       // orderData.transectionId = sessionId;
       // localStorage.setItem("orderData", JSON.stringify(orderData));
     } catch (error) {
-      console.error(" request error:", error);
+      console.error(" request error:", error.message);
     }
   };
 
