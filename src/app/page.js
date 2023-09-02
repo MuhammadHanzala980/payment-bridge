@@ -116,7 +116,7 @@ const PaymentPage = () => {
 
       const { sessionId } = subscriptionSession.data;
       subscriptionData.transectionId = sessionId;
-      orderData.orderType ="subscriptions"
+      subscriptionData.orderType ="subscriptions"
       localStorage.setItem("orderData", JSON.stringify(subscriptionData));
       await redirectToStripe({ sessionId });
     }

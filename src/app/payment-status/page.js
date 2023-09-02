@@ -42,12 +42,13 @@ const PaymentSuccessPage = () => {
         const orderId = orderData.id;
         const transectionId = orderData.transectionId;
         const orderType = orderData.orderType;
+        console.log(orderType)
         axios
-          .put("/api/update-order-status", { orderId, transectionId })
+          .put("/api/update-order-status", { orderId, transectionId, orderType })
           .then((response) => {
             const redirectUrl = `${response.data.checkOutUrl}/${orderId}/?key=${orderData.order_key}`;
             router.push(redirectUrl);
-            console.log(redirectUrl);
+            console.log(response);
           })
           .catch((error) => {
             console.error("Error updating order status:", error);
