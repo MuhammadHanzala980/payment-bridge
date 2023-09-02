@@ -90,7 +90,7 @@ const PaymentPage = () => {
       });
       const { sessionId } = paymentSession.data;
       orderData.transectionId = sessionId;
-      orderData.orderType ="orders"
+      orderData.orderType = "orders";
       localStorage.setItem("orderData", JSON.stringify(orderData));
       await redirectToStripe({ sessionId });
 
@@ -105,20 +105,23 @@ const PaymentPage = () => {
       console.log(subscriptionDetails, ">>>>");
 
       const subscriptionData = subscriptionDetails.data.orderData;
-      const interval = subscriptionData.billing_period;
-      const billing = subscriptionData.billing;
-      const subscriptionSession = await createSubscriptionSession({
-        orderId,
-        email: billing.email,
-        totalAmount: subscriptionData.total,
-        interval,
-      });
-
-      const { sessionId } = subscriptionSession.data;
-      subscriptionData.transectionId = sessionId;
-      subscriptionData.orderType ="subscriptions"
-      localStorage.setItem("orderData", JSON.stringify(subscriptionData));
-      await redirectToStripe({ sessionId });
+      if (subscriptionData.status == "active") {
+        const interval = subscriptionData.billing_period;
+        const billing = subscriptionData.billing;
+        const subscriptionSession = await createSubscriptionSession({
+          orderId,
+          email: billing.email,
+          totalAmount: subscriptionData.total,
+          interval,
+        });
+        const { sessionId } = subscriptionSession.data;
+        subscriptionData.transectionId = sessionId;
+        subscriptionData.orderType = "subscriptions";
+        localStorage.setItem("orderData", JSON.stringify(subscriptionData));
+        await redirectToStripe({ sessionId });
+      } else {
+        console.log("expired>>>>");
+      }
     }
     {
       return "Subscription Order";
