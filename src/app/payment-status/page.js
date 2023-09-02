@@ -31,7 +31,7 @@ const LottieAnimation = ({ animationData }) => {
 const PaymentSuccessPage = () => {
   const [paymentStatus, setPaymentStatus] = useState("Processing...");
   const router = useRouter();
-  
+
   useEffect(() => {
     const searchParams = new URLSearchParams(window.location.search);
 
@@ -42,11 +42,14 @@ const PaymentSuccessPage = () => {
         const orderId = orderData.id;
         const transectionId = orderData.transectionId;
         axios
-          .put("/api/update-order-status", { orderId, transectionId })
+          .put("http://localhost:9000/api/v1/update-order-status", {
+            orderId,
+            transectionId,
+          })
           .then((response) => {
             const redirectUrl = `${response.data.checkOutUrl}/${orderId}/?key=${orderData.order_key}`;
             router.push(redirectUrl);
-            console.log(redirectUrl)
+            console.log(redirectUrl);
           })
           .catch((error) => {
             console.error("Error updating order status:", error);

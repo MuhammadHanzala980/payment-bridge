@@ -16,7 +16,7 @@ export async function POST(request) {
         orderData: orderData,
       });
     } catch (error) {
-      return NextResponse.json({ error: error.message, data: req.body });
+      return NextResponse.json({ error: error.message });
     }
   } else {
     return NextResponse.json({ error: "Method not allowed" }); // Method not allowed

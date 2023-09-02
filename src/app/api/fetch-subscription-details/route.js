@@ -10,9 +10,7 @@ export async function POST(request) {
       const response = await axios.get(
         `${process.env.SITE_URL}/wp-json/wc/v3/subscriptions/${orderId}?consumer_key=${process.env.CONSUMER_KEY}&consumer_secret=${process.env.CONSUMER_SECRET}`
       );
-
       const orderData = response.data;
-
       return NextResponse.json({
         orderData: orderData,
       });

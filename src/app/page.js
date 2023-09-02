@@ -47,7 +47,7 @@ const PaymentPage = () => {
   }, []);
 
   const createPaymentSession = async ({ orderId, totalAmount }) => {
-    const createSession = await axios.post("/api/create-payment-session", {
+    const createSession = await axios.post("http://localhost:9000/api/v1/create-payment-session", {
       orderId: orderId,
       totalAmount: totalAmount,
     });
@@ -60,7 +60,7 @@ const PaymentPage = () => {
     totalAmount,
     interval,
   }) => {
-    const createSession = await axios.post("/api/create-subscription-session", {
+    const createSession = await axios.post("http://localhost:9000/api/v1/create-subscription-session", {
       orderId: orderId,
       email: email,
       totalAmount: totalAmount,
@@ -96,7 +96,7 @@ const PaymentPage = () => {
       return "Single Payment Order";
     } else if (orderData.id > orderData.parent_id) {
       const subscriptionDetails = await axios.post(
-        "/api/fetch-subscription-details",
+        "http://localhost:9000/api/v1/fetch-subscription-data",
         {
           orderId,
         }
@@ -125,17 +125,12 @@ const PaymentPage = () => {
 
   const fetchOrderData = async (orderId) => {
     try {
-      const orderDetails = await axios.post("/api/fetch-order-details", {
+      const orderDetails = await axios.post("http://localhost:9000/api/v1/fetch-order-data", {
         orderId,
       });
       console.log(orderDetails, ">>>>");
       const { orderData } = orderDetails?.data;
-
-      const orderType = await getOrderType(orderData, orderId);
-
-      // const { sessionId } = paymentSession.data;
-      // orderData.transectionId = sessionId;
-      // localStorage.setItem("orderData", JSON.stringify(orderData));
+      await getOrderType(orderData, orderId);
     } catch (error) {
       console.error(" request error:", error.message);
     }
