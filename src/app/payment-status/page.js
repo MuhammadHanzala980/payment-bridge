@@ -41,11 +41,9 @@ const PaymentSuccessPage = () => {
       if (orderData) {
         const orderId = orderData.id;
         const transectionId = orderData.transectionId;
+        const orderType = orderData.orderType;
         axios
-          .put("http://localhost:9000/api/v1/update-order-status", {
-            orderId,
-            transectionId,
-          })
+          .put("/api/update-order-status", { orderId, transectionId })
           .then((response) => {
             const redirectUrl = `${response.data.checkOutUrl}/${orderId}/?key=${orderData.order_key}`;
             router.push(redirectUrl);

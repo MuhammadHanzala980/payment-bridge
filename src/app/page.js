@@ -47,7 +47,7 @@ const PaymentPage = () => {
   }, []);
 
   const createPaymentSession = async ({ orderId, totalAmount }) => {
-    const createSession = await axios.post("http://localhost:9000/api/v1/create-payment-session", {
+    const createSession = await axios.post("/api/create-payment-session", {
       orderId: orderId,
       totalAmount: totalAmount,
     });
@@ -60,7 +60,7 @@ const PaymentPage = () => {
     totalAmount,
     interval,
   }) => {
-    const createSession = await axios.post("http://localhost:9000/api/v1/create-subscription-session", {
+    const createSession = await axios.post("/api/create-subscription-session", {
       orderId: orderId,
       email: email,
       totalAmount: totalAmount,
@@ -90,13 +90,14 @@ const PaymentPage = () => {
       });
       const { sessionId } = paymentSession.data;
       orderData.transectionId = sessionId;
+      orderData.orderType ="orders"
       localStorage.setItem("orderData", JSON.stringify(orderData));
       await redirectToStripe({ sessionId });
 
       return "Single Payment Order";
     } else if (orderData.id > orderData.parent_id) {
       const subscriptionDetails = await axios.post(
-        "http://localhost:9000/api/v1/fetch-subscription-data",
+        "/api/fetch-subscription-details",
         {
           orderId,
         }
@@ -115,6 +116,7 @@ const PaymentPage = () => {
 
       const { sessionId } = subscriptionSession.data;
       subscriptionData.transectionId = sessionId;
+      orderData.orderType ="subscriptions"
       localStorage.setItem("orderData", JSON.stringify(subscriptionData));
       await redirectToStripe({ sessionId });
     }
@@ -125,12 +127,17 @@ const PaymentPage = () => {
 
   const fetchOrderData = async (orderId) => {
     try {
-      const orderDetails = await axios.post("http://localhost:9000/api/v1/fetch-order-data", {
+      const orderDetails = await axios.post("/api/fetch-order-details", {
         orderId,
       });
       console.log(orderDetails, ">>>>");
       const { orderData } = orderDetails?.data;
-      await getOrderType(orderData, orderId);
+
+      const orderType = await getOrderType(orderData, orderId);
+
+      // const { sessionId } = paymentSession.data;
+      // orderData.transectionId = sessionId;
+      // localStorage.setItem("orderData", JSON.stringify(orderData));
     } catch (error) {
       console.error(" request error:", error.message);
     }
