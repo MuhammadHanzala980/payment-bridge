@@ -35,24 +35,23 @@ export async function PUT(request) {
   if (request.method === "PUT") {
     try {
       // chk subs sts
-      // 
-      
-      
+      //
+
       const data = {
         status: orderType === "orders" ? "processing" : "active",
         transaction_id: req.transectionId,
       };
       // if (orderType == "subscriptions") {
-        // console.log(getTodayAndOneMonthAgo());
-        // const { today, oneMonthAgo } = getTodayAndOneMonthAgo();
-        // data.last_payment_date_gmt = today;
-        // data.next_payment_date_gmt = oneMonthAgo;
+      // console.log(getTodayAndOneMonthAgo());
+      // const { today, oneMonthAgo } = getTodayAndOneMonthAgo();
+      // data.last_payment_date_gmt = today;
+      // data.next_payment_date_gmt = oneMonthAgo;
       // }
       const formData = qs.stringify(data);
-      console.log(formData);
+      console.log(formData, process.env.SITE_URL);
       const id = req.orderId;
       const response = await axios.put(
-        `https://mcdfynew.itrakmedia.com/wp-json/wc/v3/${orderType}/${id}/?consumer_key=ck_7804b87d10f2dd1fac11683b48dfcbd874db1e57&consumer_secret=cs_01befbd49bfb3217cab554e5c1f50d46038155b9`,
+        `${process.env.SITE_URL}/wp-json/wc/v3/${orderType}/${id}/?consumer_key=${process.env.CONSUMER_KEY}&consumer_secret=${process.env.CONSUMER_SECRET}`,
         formData,
         {
           headers: {
@@ -67,7 +66,7 @@ export async function PUT(request) {
             orderType === "orders" ? "processing" : "active"
           }`,
           id: id,
-          checkOutUrl: process.env.CHECKOUT_URL,
+          checkOutUrl: process.env.SITE_URL,
         });
       } else {
         return NextResponse.json({ message: "Failed to update order status" });

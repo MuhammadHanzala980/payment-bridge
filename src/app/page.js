@@ -115,6 +115,7 @@ const PaymentPage = () => {
           interval,
         });
         const { sessionId } = subscriptionSession.data;
+        console.log(subscriptionSession)
         subscriptionData.transectionId = sessionId;
         subscriptionData.orderType = "subscriptions";
         localStorage.setItem("orderData", JSON.stringify(subscriptionData));
