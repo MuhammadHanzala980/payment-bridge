@@ -2,64 +2,32 @@ import axios from "axios";
 import qs from "qs"; // Import the qs library
 import { NextResponse } from "next/server";
 
-// function formatDateToISO(date) {
-//   const year = date.getFullYear();
-//   const month = String(date.getMonth() + 1).padStart(2, "0");
-//   const day = String(date.getDate()).padStart(2, "0");
-//   const hours = String(date.getHours()).padStart(2, "0");
-//   const minutes = String(date.getMinutes()).padStart(2, "0");
-//   const seconds = String(date.getSeconds()).padStart(2, "0");
-
-//   return `${year}-${month}-${day}T${hours}:${minutes}:${seconds}`;
-// }
-
-// function getTodayAndOneMonthAgo() {
-//   const today = new Date();
-//   const oneMonthAgo = new Date(today);
-//   oneMonthAgo.setMonth(today.getMonth() - 1);
-
-//   const formattedToday = formatDateToISO(today);
-//   const formattedOneMonthAgo = formatDateToISO(oneMonthAgo);
-
-//   return {
-//     today: formattedToday,
-//     oneMonthAgo: formattedOneMonthAgo,
-//   };
-// }
-
 export async function PUT(request) {
-  //   const req = await request.json();
   const req = await request.json();
   console.log(req);
   const orderType = req.orderType;
   if (request.method === "PUT") {
     try {
-      // chk subs sts
-      //
-
       const data = {
         status: orderType === "orders" ? "processing" : "active",
         transaction_id: req.transectionId,
       };
-      // if (orderType == "subscriptions") {
-      // console.log(getTodayAndOneMonthAgo());
-      // const { today, oneMonthAgo } = getTodayAndOneMonthAgo();
-      // data.last_payment_date_gmt = today;
-      // data.next_payment_date_gmt = oneMonthAgo;
-      // }
-      const formData = qs.stringify(data);
-      console.log(formData, process.env.SITE_URL);
-      const id = req.orderId;
-      const response = await axios.put(
-        `${process.env.SITE_URL}/wp-json/wc/v3/${orderType}/${id}/?consumer_key=${process.env.CONSUMER_KEY}&consumer_secret=${process.env.CONSUMER_SECRET}`,
-        formData,
-        {
-          headers: {
-            "Content-Type": "application/x-www-form-urlencoded",
-          },
-        }
-      );
 
+      const formData = qs.stringify(data);
+      const id = req.orderId;
+
+      const options = {
+        method: orderType === "orders" ? "PUT" : "POST",
+        url: `${process.env.SITE_URL}/wp-json/wc/v3/${orderType}/${id}/?consumer_key=${process.env.CONSUMER_KEY}&consumer_secret=${process.env.CONSUMER_SECRET}`,
+        data: formData,
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded",
+        },
+      };
+      console.log(options, data, process.env.SITE_URL);
+
+      const response = await axios(options);
+      console.log(response);
       if (response.status === 200) {
         return NextResponse.json({
           message: `Order status updated to ${

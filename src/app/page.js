@@ -105,25 +105,26 @@ const PaymentPage = () => {
       console.log(subscriptionDetails, ">>>>");
 
       const subscriptionData = subscriptionDetails.data.orderData;
-      if (subscriptionData.status == "active") {
-        const interval = subscriptionData.billing_period;
-        const billing = subscriptionData.billing;
-        const subscriptionSession = await createSubscriptionSession({
-          orderId,
-          email: billing.email,
-          totalAmount: subscriptionData.total,
-          interval,
-        });
-        const { sessionId } = subscriptionSession.data;
-        console.log(subscriptionSession)
-        subscriptionData.transectionId = sessionId;
-        subscriptionData.orderType = "subscriptions";
-        localStorage.setItem("orderData", JSON.stringify(subscriptionData));
-        await redirectToStripe({ sessionId });
-      } else {
-        console.log("expired>>>>");
-      }
+      // if (subscriptionData.status == "active") {
+      const interval = subscriptionData.billing_period;
+      const billing = subscriptionData.billing;
+      const subscriptionSession = await createSubscriptionSession({
+        orderId,
+        email: billing.email,
+        totalAmount: subscriptionData.total,
+        interval,
+      });
+      const { sessionId } = subscriptionSession.data;
+      console.log(subscriptionSession);
+      subscriptionData.transectionId = sessionId;
+      subscriptionData.orderType = "subscriptions";
+      localStorage.setItem("orderData", JSON.stringify(subscriptionData));
+      await redirectToStripe({ sessionId });
     }
+    // else {
+    // console.log("expired>>>>");
+    // }
+    // }
     {
       return "Subscription Order";
     }
