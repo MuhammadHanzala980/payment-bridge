@@ -1,17 +1,18 @@
-"use client";
+"use client"
 import { useEffect, useRef } from "react";
 import axios from "axios";
 import { loadStripe } from "@stripe/stripe-js";
 import lottie from "lottie-web";
 import redirectCheckout from "./lottie/redirectCheckout.json";
+import { useRouter } from "next/navigation";
 
 const stripePromise = loadStripe(
   process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY
 );
-
 // components/LottieAnimation.js
 
 const LottieAnimation = ({ animationData }) => {
+  console.log(process.env.CONSUMER_KEY)
   const containerRef = useRef(null);
 
   useEffect(() => {
@@ -34,6 +35,8 @@ const LottieAnimation = ({ animationData }) => {
 };
 
 const PaymentPage = () => {
+  const router = useRouter();
+
   useEffect(() => {
     const searchParams = new URLSearchParams(window.location.search);
     const orderId = searchParams.get("orderid");
@@ -42,7 +45,9 @@ const PaymentPage = () => {
       console.log(orderId);
       fetchOrderData(orderId);
     } else {
-      console.log("err");
+      console.log(process.env.SUCCESS_URL);
+      // router.push("https://www.google.com");
+      // router.push(process.env.HOMEPAGE);
     }
   }, []);
 
