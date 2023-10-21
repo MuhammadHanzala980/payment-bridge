@@ -42,11 +42,14 @@ const PaymentSuccessPage = () => {
         const orderId = orderData.id;
         const transectionId = orderData.transectionId;
         const orderType = orderData.orderType;
-        console.log(orderType)
         axios
-          .put("/api/update-order-status", { orderId, transectionId, orderType })
+          .put("/api/update-order-status", {
+            orderId,
+            transectionId,
+            orderType,
+          })
           .then((response) => {
-            console.log('response');
+            console.log("response");
             // const redirectUrl = `${response.data.checkOutUrl}/checkout/order-received/${orderId}/?key=${orderData.order_key}`;
             // router.push(redirectUrl);
           })
@@ -84,7 +87,19 @@ const PaymentSuccessPage = () => {
             marginTop: "1em",
           }}
         >
-          Please Wait While We Generate Your Order Reciept!
+          We have successfully received your payment and are
+          <br /> currently in the process of generating your receipt.{" "}
+        </p>
+
+        <p
+          style={{
+            color: "#222",
+            fontWeight: "600",
+            fontSize: "13px",
+            marginTop: "1em",
+          }}
+        >
+          You can expect to receive the receipt via email shortly.
         </p>
       </div>
     </div>

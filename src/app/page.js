@@ -45,9 +45,9 @@ const PaymentPage = () => {
       console.log(orderId);
       fetchOrderData(orderId);
     } else {
-      console.log(process.env.SUCCESS_URL);
+      console.log(process.env.NEXT_PUBLIC_HOMEPAGE);
       // router.push("https://www.google.com");
-      // router.push(process.env.HOMEPAGE);
+      router.push(process.env.NEXT_PUBLIC_HOMEPAGE);
     }
   }, []);
 
