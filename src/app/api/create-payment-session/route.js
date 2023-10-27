@@ -16,7 +16,7 @@ export async function POST(request) {
         line_items: [
           {
             price_data: {
-              currency: "usd",
+              currency: "cad",
               unit_amount: totalAmount * 100,
               product_data: {
                 name: "Total Amount",
